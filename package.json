@@ -1,0 +1,78 @@
+{
+  "name": "plist-viewer",
+  "version": "1.0.0",
+  "description": "Cross-platform Electron + Python Plist Viewer & Forensic Inspector (XML, Binary, NSKeyedArchiver, SQLite, Blobs)",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev:vite": "vite --port 5173",
+    "dev:backend": "python backend/main.py --port 8765",
+    "build:backend": "python scripts/build_backend.py",
+    "build:renderer": "vite build",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "build": "npm run build:renderer && npm run build:electron",
+    "start": "npm run build && electron .",
+    "test:backend": "python backend/tests/test_backend.py -v",
+    "package:win": "npm run build:backend && npm run build && electron-builder --win",
+    "package:mac": "npm run build:backend && npm run build && electron-builder --mac",
+    "package:linux": "npm run build:backend && npm run build && electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.antigravity.plistviewer",
+    "productName": "PListViewer",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "backend",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "!**/__pycache__/**",
+          "!**/build/**"
+        ]
+      },
+      {
+        "from": "samples",
+        "to": "samples"
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.developer-tools"
+    },
+    "linux": {
+      "target": "AppImage",
+      "category": "Development"
+    }
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.4"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true,
+    "electron@31.7.7": true
+  }
+}

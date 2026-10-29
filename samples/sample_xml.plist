@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleIdentifier</key>
+	<string>com.antigravity.plistviewer.sample</string>
+	<key>CFBundleName</key>
+	<string>PListViewer Diagnostic Sample</string>
+	<key>CFBundleNumericVersion</key>
+	<integer>10200</integer>
+	<key>CFBundleShortVersionString</key>
+	<string>1.2.0</string>
+	<key>EmbeddedBinaryPlistData</key>
+	<data>
+	YnBsaXN0MDDTAQIDBAUMXxAVRW1iZWRkZWRDb25maWdWZXJzaW9uXEZlYXR1cmVGbGFn
+	c15TaWduYXR1cmVCeXRlc1UyLjQuMdMGBwgJCgtfEBpFbmFibGVIYXJkd2FyZUFjY2Vs
+	ZXJhdGlvbl8QFE1heENvbmN1cnJlbnRUaHJlYWRzXxARVGVsZW1ldHJ5RW5kcG9pbnQJ
+	EBBfECxodHRwczovL3RlbGVtZXRyeS5leGFtcGxlLmludGVybmFsL3YyL2luZ2VzdE8Q
+	JYlQTkcNChoKAAAADUlIRFItU0FNUExFLVBBWUxPQUQtQllURVMIDyc0Q0lQbYSYmZvK
+	AAAAAAAAAQEAAAAAAAAADQAAAAAAAAAAAAAAAAAAAPI=
+	</data>
+	<key>EmbeddedXMLPlistString</key>
+	<string>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+	&lt;key&gt;NestedXMLKey&lt;/key&gt;
+	&lt;string&gt;Hello from embedded XML string&lt;/string&gt;
+	&lt;key&gt;RetryCount&lt;/key&gt;
+	&lt;integer&gt;3&lt;/integer&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0</string>
+	<key>LastModifiedTimestamp</key>
+	<date>2026-10-29T17:30:00Z</date>
+	<key>PerformanceMetrics</key>
+	<dict>
+		<key>CacheHitRatio</key>
+		<real>0.9642</real>
+		<key>MemoryFootprintBytes</key>
+		<integer>67108864</integer>
+		<key>StartupLatencyMs</key>
+		<real>42.875</real>
+	</dict>
+	<key>RawBinarySessionToken</key>
+	<data>
+	U0VTU0lPTl9UT0tFTl9IRUFERVI6OgABAgNVc2VyPWFkbWluO1JvbGU9Rm9yZW5zaWNB
+	bmFseXN0O0V4cGlyZXM9MjAyNy0wMS0wMVQwMDowMDowMFr//v38
+	</data>
+	<key>RecentEndpoints</key>
+	<array>
+		<dict>
+			<key>CertificateThumbprint</key>
+			<data>
+			3q2+78r+ur4BI0VniavN7w==
+			</data>
+			<key>Host</key>
+			<string>api.core.internal</string>
+			<key>Port</key>
+			<integer>8443</integer>
+			<key>UseTLS</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>CertificateThumbprint</key>
+			<data>
+			ABEiM0RVZneImaq7zN3u/w==
+			</data>
+			<key>Host</key>
+			<string>fallback.core.internal</string>
+			<key>Port</key>
+			<integer>8080</integer>
+			<key>UseTLS</key>
+			<false/>
+		</dict>
+	</array>
+	<key>SupportedArchitectures</key>
+	<array>
+		<string>x86_64</string>
+		<string>arm64</string>
+		<string>universal2</string>
+	</array>
+	<key>UIRequiresFullScreen</key>
+	<false/>
+</dict>
+</plist>
