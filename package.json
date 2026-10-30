@@ -17,7 +17,7 @@
     "package:linux": "npm run build:backend && npm run build && electron-builder --linux"
   },
   "build": {
-    "appId": "com.antigravity.plistviewer",
+    "appId": "com.dwashintbiz.plistviewer",
     "productName": "PListViewer",
     "directories": {
       "output": "release"

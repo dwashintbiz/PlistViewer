@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { PlistNode } from '../types';
 
 interface GridViewProps {
@@ -29,6 +29,8 @@ export const GridView: React.FC<GridViewProps> = ({
 }) => {
   const [sortField, setSortField] = useState<SortField>('path');
   const [sortDir, setSortDir] = useState<SortDirection>('asc');
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const rowRefs = useRef<Map<string, HTMLTableRowElement>>(new Map());
 
   const allNodes = useMemo(() => flattenTree(root, []), [root]);
 
@@ -62,6 +64,41 @@ export const GridView: React.FC<GridViewProps> = ({
     });
   }, [allNodes, searchQuery, typeFilter, sortField, sortDir]);
 
+  // Keep the selected row visible inside the grid viewport when selection changes
+  useEffect(() => {
+    if (!selectedNodeId) return;
+    const rowEl = rowRefs.current.get(selectedNodeId);
+    if (rowEl) {
+      rowEl.scrollIntoView({ block: 'nearest' });
+    }
+  }, [selectedNodeId]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') {
+      return;
+    }
+    if (filteredAndSorted.length === 0) {
+      return;
+    }
+
+    e.preventDefault();
+    const currentIndex = filteredAndSorted.findIndex((n) => n.id === selectedNodeId);
+
+    let nextIndex = 0;
+    if (currentIndex === -1) {
+      nextIndex = 0;
+    } else if (e.key === 'ArrowDown') {
+      nextIndex = Math.min(currentIndex + 1, filteredAndSorted.length - 1);
+    } else if (e.key === 'ArrowUp') {
+      nextIndex = Math.max(currentIndex - 1, 0);
+    }
+
+    const targetNode = filteredAndSorted[nextIndex];
+    if (targetNode && targetNode.id !== selectedNodeId) {
+      onSelectNode(targetNode);
+    }
+  };
+
   const handleSort = (field: SortField) => {
     if (sortField === field) {
       setSortDir((prev) => (prev === 'asc' ? 'desc' : 'asc'));
@@ -83,7 +120,12 @@ export const GridView: React.FC<GridViewProps> = ({
           Data Grid View ({filteredAndSorted.length.toLocaleString()} rows)
         </span>
       </div>
-      <div className="grid-table-wrapper">
+      <div
+        ref={wrapperRef}
+        className="grid-table-wrapper"
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+      >
         <table className="data-grid">
           <thead>
             <tr>
@@ -102,8 +144,18 @@ export const GridView: React.FC<GridViewProps> = ({
               return (
                 <tr
                   key={node.id}
+                  ref={(el) => {
+                    if (el) {
+                      rowRefs.current.set(node.id, el);
+                    } else {
+                      rowRefs.current.delete(node.id);
+                    }
+                  }}
                   className={isSelected ? 'selected' : ''}
-                  onClick={() => onSelectNode(node)}
+                  onClick={() => {
+                    wrapperRef.current?.focus({ preventScroll: true });
+                    onSelectNode(node);
+                  }}
                 >
                   <td className="col-key">
                     {node.key}

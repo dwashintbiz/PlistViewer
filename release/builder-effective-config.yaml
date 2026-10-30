@@ -1,7 +1,7 @@
 directories:
   output: release
   buildResources: build
-appId: com.antigravity.plistviewer
+appId: com.dwashintbiz.plistviewer
 productName: PListViewer
 files:
   - filter:

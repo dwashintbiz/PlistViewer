@@ -325,6 +325,7 @@ body,
   padding: 4px 0;
   font-family: var(--font-mono);
   font-size: 12.5px;
+  outline: none;
 }
 
 .tree-row {
@@ -430,6 +431,7 @@ body,
 .grid-table-wrapper {
   flex: 1;
   overflow: auto;
+  outline: none;
 }
 
 .data-grid {
@@ -454,6 +456,7 @@ body,
 .data-grid tbody tr {
   border-bottom: 1px solid rgba(51, 65, 85, 0.45);
   cursor: pointer;
+  scroll-margin-top: 28px;
 }
 
 .data-grid tbody tr:hover {

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { PlistNode, PlistNodeType } from '../types';
 
 interface TreeViewProps {
@@ -49,9 +49,11 @@ export const TreeView: React.FC<TreeViewProps> = ({
     }
     return initial;
   });
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const rowRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   // Reset root expansion when root changes
-  React.useEffect(() => {
+  useEffect(() => {
     const next = new Set<string>([root.id]);
     for (const c of root.children) {
       next.add(c.id);
@@ -60,6 +62,59 @@ export const TreeView: React.FC<TreeViewProps> = ({
   }, [root.id]);
 
   const isFiltering = searchQuery.trim().length > 0 || typeFilter !== 'all';
+
+  // Compute flat list of currently visible nodes in tree order for ArrowUp/ArrowDown navigation
+  const visibleNodes = useMemo(() => {
+    const list: PlistNode[] = [];
+    const walk = (node: PlistNode) => {
+      if (isFiltering && !nodeMatchesFilter(node, searchQuery, typeFilter)) {
+        return;
+      }
+      list.push(node);
+      const hasChildren = node.children && node.children.length > 0;
+      const isExpanded = isFiltering || expandedIds.has(node.id);
+      if (hasChildren && isExpanded) {
+        for (const child of node.children) {
+          walk(child);
+        }
+      }
+    };
+    walk(root);
+    return list;
+  }, [root, expandedIds, isFiltering, searchQuery, typeFilter]);
+
+  useEffect(() => {
+    if (!selectedNodeId) return;
+    const rowEl = rowRefs.current.get(selectedNodeId);
+    if (rowEl) {
+      rowEl.scrollIntoView({ block: 'nearest' });
+    }
+  }, [selectedNodeId]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') {
+      return;
+    }
+    if (visibleNodes.length === 0) {
+      return;
+    }
+
+    e.preventDefault();
+    const currentIndex = visibleNodes.findIndex((n) => n.id === selectedNodeId);
+    let nextIndex = 0;
+    if (currentIndex === -1) {
+      nextIndex = 0;
+    } else if (e.key === 'ArrowDown') {
+      nextIndex = Math.min(currentIndex + 1, visibleNodes.length - 1);
+    } else if (e.key === 'ArrowUp') {
+      nextIndex = Math.max(currentIndex - 1, 0);
+    }
+
+    const targetNode = visibleNodes[nextIndex];
+    if (targetNode && targetNode.id !== selectedNodeId) {
+      onSelectNode(targetNode);
+    }
+  };
 
   const toggleExpand = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -94,9 +149,19 @@ export const TreeView: React.FC<TreeViewProps> = ({
     return (
       <div key={node.id} className="tree-node-wrapper">
         <div
+          ref={(el) => {
+            if (el) {
+              rowRefs.current.set(node.id, el);
+            } else {
+              rowRefs.current.delete(node.id);
+            }
+          }}
           className={`tree-row ${isSelected ? 'selected' : ''}`}
           style={{ paddingLeft: `${depth * 18 + 8}px` }}
-          onClick={() => onSelectNode(node)}
+          onClick={() => {
+            containerRef.current?.focus({ preventScroll: true });
+            onSelectNode(node);
+          }}
         >
           <span
             className={`tree-caret ${hasChildren ? 'clickable' : 'empty'}`}
@@ -151,7 +216,14 @@ export const TreeView: React.FC<TreeViewProps> = ({
           </button>
         </div>
       </div>
-      <div className="tree-container">{treeContent}</div>
+      <div
+        ref={containerRef}
+        className="tree-container"
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+      >
+        {treeContent}
+      </div>
     </div>
   );
 };
