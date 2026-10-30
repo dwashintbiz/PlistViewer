@@ -23,6 +23,9 @@ def main() -> int:
     build_dir = os.path.join(project_root, "backend", "build")
     spec_dir = os.path.join(project_root, "backend")
 
+    if os.path.isdir(dist_dir):
+        shutil.rmtree(dist_dir, ignore_errors=True)
+
     # Ensure PyInstaller is available
     try:
         import PyInstaller  # noqa: F401
